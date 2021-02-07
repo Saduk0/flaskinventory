@@ -16,11 +16,17 @@ def index():
         ' FROM product p JOIN user u ON p.author_id = u.id'
         ' ORDER BY created DESC'
     ).fetchall()
-    return render_template('admin/index.html', products=products)
+    locations = db.execute(
+        'SELECT l.id, locationName, created, author_id, username'
+        ' FROM location l JOIN user u ON l.author_id = u.id'
+        ' ORDER BY created DESC'
+    ).fetchall()
+    
+    return render_template('admin/index.html', products=products, locations=locations)
 
-@bp.route('/create', methods=('GET', 'POST'))
+@bp.route('/createproduct', methods=('GET', 'POST'))
 @login_required
-def create():
+def createproduct():
     if request.method == 'POST':
         productName = request.form['productName']
         amount = request.form['amount']
@@ -42,7 +48,7 @@ def create():
             )
             db.commit()
             return redirect(url_for('admin.index'))
-    return render_template('admin/create.html')
+    return render_template('admin/createproduct.html')
 
 def get_product(id, check_author=True):
     product = get_db().execute(
@@ -59,9 +65,9 @@ def get_product(id, check_author=True):
 
     return product
 
-@bp.route('/<int:id>/update', methods=('GET', 'POST'))
+@bp.route('/<int:id>/updateproduct', methods=('GET', 'POST'))
 @login_required
-def update(id):
+def updateproduct(id):
     product = get_product(id)
 
     if request.method =='POST':
@@ -82,11 +88,11 @@ def update(id):
             db.commit()
             return redirect(url_for('admin.index'))
 
-    return render_template('admin/update.html', product=product)
+    return render_template('admin/updateproduct.html', product=product)
 
-@bp.route('/<int:id>/delete', methods=('POST',))
+@bp.route('/<int:id>/deleteproduct', methods=('POST',))
 @login_required
-def delete(id):
+def deleteproduct(id):
     get_product(id)
     db = get_db()
     db.execute('DELETE FROM product WHERE id = ?', (id,))

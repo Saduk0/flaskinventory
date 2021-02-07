@@ -3,7 +3,7 @@
 {% block header %}
 <h1>{% block title %}Product{% endblock %}</h1>
 {% if g.user %}
-  <a class="action" href="{{ url_for('admin.create') }}">New</a>
+  <a class="action" href="{{ url_for('admin.createproduct') }}">New</a>
 {% endif %}{% endblock %}
 
 {% block content %}
@@ -14,7 +14,7 @@
       <div class="about">by {{ product['username'] }} on {{ product['created'].strftime('%Y-%m-%d') }}</div>
     </div>
     {% if g.user['id'] == product['author_id'] %}
-      <a class="action" href="{{ url_for('admin.update', id=product['id']) }}">Edit</a>
+      <a class="action" href="{{ url_for('admin.updateproduct', id=product['id']) }}">Edit</a>
     {% endif %}
   </header>
 </article>
