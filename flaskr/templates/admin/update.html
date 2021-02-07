@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+
+{% block header %}
+  <h1>{% block title %}Edit "{{ product['productName'] }}"{% endblock %}</h1>
+{% endblock %}
+
+{% block content %}
+  <form method="post">
+    <label for="title">Product Name</label>
+    <input name="productName" id="productName"
+      value="{{ request.form['productName'] or product['productName'] }}" required>
+    <label for="amount">Amount</label>
+    <textarea name="amount" id="amount">{{ request.form['amount'] or product['amount'] }}</textarea>
+    <input type="submit" value="Save">
+  </form>
+  <hr>
+  <form action="{{ url_for('admin.delete', id=product['id']) }}" method="post">
+    <input class="danger" type="submit" value="Delete" onclick="return confirm('Are you sure?');">
+  </form>
+{% endblock %}
