@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+
+{% block header %}
+  <h1>{% block title %}Edit "{{ location['locationName'] }}"{% endblock %}</h1>
+{% endblock %}
+
+{% block content %}
+  <form method="post">
+    <label for="title">Location Name</label>
+    <input name="locationName" id="locationName"
+      value="{{ request.form['locationName'] or location['locationName'] }}" required>
+    <!-- <label for="amount">Amount</label>
+    <textarea name="amount" id="amount">{{ request.form['amount'] or location['amount'] }}</textarea> -->
+    <input type="submit" value="Save">
+  </form>
+  <hr>
+  <form action="{{ url_for('admin.deletelocation', id=location['id']) }}" method="post">
+    <input class="danger" type="submit" value="Delete" onclick="return confirm('Are you sure?');">
+  </form>
+{% endblock %}

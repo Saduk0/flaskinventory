@@ -3,7 +3,7 @@
 {% block header %}
   <h1>{% block title %}Products{% endblock %}</h1>
   {% if g.user %}
-    <a class="action" href="{{ url_for('admin.create') }}">New</a>
+    <a class="action" href="{{ url_for('admin.createproduct') }}">New</a>
   {% endif %}
 {% endblock %}
 
@@ -25,11 +25,19 @@
     {% endif %}
   {% endfor %}
 
+
+  <header>
+  <h1>Locations</h1>
+  {% if g.user %}
+    <a class="action" href="{{ url_for('admin.createlocation') }}">New</a>
+  {% endif %}
+  </header>
+
   {% for location in locations %}
     <article class="location">
       <header>
         <div>
-          <h1><a href="{{ url_for('admin.viewlocation', id=location['id']) }}">{{ location['locationName'] }} - {{ product['amount']}}</a></h1>
+          <h1><a href="{{ url_for('admin.viewlocation', id=location['id']) }}">{{ location['locationName'] }} </a></h1>
           <div class="about">by {{ location['username'] }} on {{ location['created'].strftime('%Y-%m-%d') }}</div>
         </div>
         {% if g.user['id'] == location['author_id'] %}
@@ -41,4 +49,5 @@
       <hr>
     {% endif %}
   {% endfor %}
+
 {% endblock %}

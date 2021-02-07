@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+
+{% block header %}
+  <h1>{% block title %}New Location{% endblock %}</h1>
+{% endblock %}
+
+{% block content %}
+  <form method="post">
+    <label for="locationName">Location Name</label>
+    <input name="locationName" id="locationName" value="{{ request.form['locationName'] }}" required>
+    <!-- <label for="amount">Amount</label>
+    <input type="number" name="amount" id="amount" value="{{ request.form['amount'] }}" required> </input> -->
+    <input type="submit" value="Save">
+  </form>
+{% endblock %}

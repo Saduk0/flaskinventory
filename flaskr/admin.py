@@ -21,7 +21,7 @@ def index():
         ' FROM location l JOIN user u ON l.author_id = u.id'
         ' ORDER BY created DESC'
     ).fetchall()
-    
+
     return render_template('admin/index.html', products=products, locations=locations)
 
 @bp.route('/createproduct', methods=('GET', 'POST'))
@@ -99,8 +99,93 @@ def deleteproduct(id):
     db.commit()
     return redirect(url_for('admin.index'))
 
-@bp.route('/<int:id>/', methods=('GET',))
-def view(id):
+@bp.route('/p<int:id>/', methods=('GET',))
+def viewproduct(id):
     product = get_product(id, check_author=False)
 
     return render_template('admin/viewproduct.html', product=product)
+
+
+###
+
+
+@bp.route('/createlocation', methods=('GET', 'POST'))
+@login_required
+def createlocation():
+    if request.method == 'POST':
+        locationName = request.form['locationName']
+        #amount = request.form['amount']
+        error = None
+
+        if not locationName:
+            error = 'Location name is required.'
+        # if not amount:
+        #     error = 'Amount is required.'
+
+        if error is not None:
+            flash(error)
+        else:
+            db = get_db()
+            db.execute(
+                'INSERT INTO location (locationName, author_id)'
+                ' VALUES (?, ?)',
+                (locationName, g.user['id'])
+            )
+            db.commit()
+            return redirect(url_for('admin.index'))
+    return render_template('admin/createlocation.html')
+
+def get_location(id, check_author=True):
+    location = get_db().execute(
+        'SELECT p.id, locationName, created, author_id, username'
+        ' FROM location p JOIN user u ON p.author_id = u.id'
+        ' WHERE p.id = ?',
+        (id,)
+    ).fetchone()
+    if location is None:
+        abort(404, "Location id {0} doesn't exist.".format(id))
+
+    if check_author and location['author_id'] != g.user['id']:
+        abort(403)
+
+    return location
+
+@bp.route('/<int:id>/updatelocation', methods=('GET', 'POST'))
+@login_required
+def updatelocation(id):
+    location = get_location(id)
+
+    if request.method =='POST':
+        locationName = request.form['locationName']
+        # amount = request.form['amount']
+        error = None
+        if not locationName:
+            error = 'Location Name is required.'
+        if error is not None:
+            flash(error)
+        else:
+            db = get_db()
+            db.execute(
+                'UPDATE location SET locationName = ?'
+                ' WHERE id = ?',
+                (locationName, id)
+            )
+            db.commit()
+            return redirect(url_for('admin.index'))
+
+    return render_template('admin/updatelocation.html', location=location)
+
+@bp.route('/<int:id>/deletelocation', methods=('POST',))
+@login_required
+def deletelocation(id):
+    get_location(id)
+    db = get_db()
+    db.execute('DELETE FROM location WHERE id = ?', (id,))
+    db.commit()
+    return redirect(url_for('admin.index'))
+
+@bp.route('/l<int:id>/', methods=('GET',))
+def viewlocation(id):
+    location = get_location(id, check_author=False)
+
+    return render_template('admin/viewlocation.html', location=location)
