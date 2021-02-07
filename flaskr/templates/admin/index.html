@@ -12,7 +12,7 @@
     <article class="product">
       <header>
         <div>
-          <h1>{{ product['productName'] }} - {{ product['amount']}}</h1>
+          <h1><a href="{{ url_for('admin.view', id=product['id']) }}">{{ product['productName'] }} - {{ product['amount']}}</a></h1>
           <div class="about">by {{ product['username'] }} on {{ product['created'].strftime('%Y-%m-%d') }}</div>
         </div>
         {% if g.user['id'] == product['author_id'] %}

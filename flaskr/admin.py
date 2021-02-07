@@ -92,3 +92,9 @@ def delete(id):
     db.execute('DELETE FROM product WHERE id = ?', (id,))
     db.commit()
     return redirect(url_for('admin.index'))
+
+@bp.route('/<int:id>/', methods=('GET',))
+def view(id):
+    product = get_product(id, check_author=False)
+
+    return render_template('admin/viewproduct.html', product=product)
