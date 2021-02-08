@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+
+{% block header %}
+  <h1>{% block title %}New Movement{% endblock %}</h1>
+{% endblock %}
+
+{% block content %}
+  <form method="post">
+    <label for="movementfrom">Movement from</label>
+    <input name="movementfrom" id="movementfrom" value="{{ request.form['from_location'] }}">
+    <label for="movementto">Movement to</label>
+    <input name="movementto" id="movementto" value="{{ request.form['to_location'] }}">
+    <label for="product_id">Product</label>
+    <input name="product_id" id="product_id" value="{{ request.form['product_id'] }}">
+    <label for="qty">Quantity</label>
+    <input name="qty" id="qty" value="{{ request.form['qty'] }}">
+
+    <input type="submit" value="Save">
+  </form>
+{% endblock %}

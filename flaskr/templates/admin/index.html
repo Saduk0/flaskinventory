@@ -12,7 +12,7 @@
     <article class="product">
       <header>
         <div>
-          <h1><a href="{{ url_for('admin.viewproduct', id=product['id']) }}">{{ product['productName'] }} - {{ product['amount']}}</a></h1>
+          <h1><a href="{{ url_for('admin.viewproduct', id=product['id']) }}">{{ product['productName'] }}</a></h1>
           <div class="about">by {{ product['username'] }} on {{ product['created'].strftime('%Y-%m-%d') }}</div>
         </div>
         {% if g.user['id'] == product['author_id'] %}
@@ -50,4 +50,42 @@
     {% endif %}
   {% endfor %}
 
+  <header>
+  <h1>Movements</h1>
+  {% if g.user %}
+    <a class="action" href="{{ url_for('admin.createmovement') }}">New</a>
+  {% endif %}
+  </header>
+
+    <article class="movement">
+      <header>
+        <table>
+        <thead><tr>
+            <th class="column_name">ID</th>
+            <th class="column_name">From</th>
+            <th class="column_name">To</th>
+            <th class="column_name">Product</th>
+            <th class="column_name">Quantity</th>
+            <th class="column_name">Edit</th>
+        </tr>
+        </thead>
+        {% for movement in movements %}
+        <tbody>
+        <tr>
+            <td>{{ movement['movement_id'] }}</td>
+            <td>{{ movement['from'] }}</td>
+            <td>{{ movement['to'] }}</td>
+            <td>{{ movement['product'] }}</td>
+            <td>{{ movement['qty'] }}</td>
+            <td>{% if g.user['id'] == movement['author_id'] %}
+              <a class="action" href="{{ url_for('admin.updatemovement', id=movement['id']) }}">Edit</a>
+            {% endif %}</td>
+        </tr>
+    </tbody></table>
+      </header>
+    </article>
+    {% if not loop.last %}
+      <hr>
+    {% endif %}
+  {% endfor %}
 {% endblock %}

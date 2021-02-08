@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+
+{% block header %}
+<h1>{% block title %}Product{% endblock %}</h1>
+{% if g.user %}
+  <a class="action" href="{{ url_for('admin.createproduct') }}">New</a>
+{% endif %}{% endblock %}
+
+{% block content %}
+<article class="movement">
+  <header>
+    <table>
+    <thead><tr>
+        <th class="column_name">ID</th>
+        <th class="column_name">From</th>
+        <th class="column_name">To</th>
+        <th class="column_name">Product</th>
+        <th class="column_name">Quantity</th>
+        <th class="column_name">Edit</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr>
+        <td>{{ movement['movement_id'] }}</td>
+        <td>{{ movement['from'] }}</td>
+        <td>{{ movement['to'] }}</td>
+        <td>{{ movement['product'] }}</td>
+        <td>{{ movement['qty'] }}</td>
+        <td>{% if g.user['id'] == movement['author_id'] %}
+          <a class="action" href="{{ url_for('admin.updatemovement', id=movement['id']) }}">Edit</a>
+        {% endif %}</td>
+    </tr>
+</tbody></table>
+  </header>
+</article>
+<hr>
+<a class="action" href="{{ url_for('admin.index') }}">Home</a>
+
+{% endblock %}

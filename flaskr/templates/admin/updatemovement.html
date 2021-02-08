@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+
+{% block header %}
+  <h1>{% block title %}Edit "{{ movement['id'] }}"{% endblock %}</h1>
+{% endblock %}
+
+{% block content %}
+  <form method="post">
+    <label for="movementfrom">Movement from</label>
+    <input name="movementfrom" id="movementfrom" value="{{ request.form['from_location'] or movement['from_location']}}">
+    <label for="movementto">Movement to</label>
+    <input name="movementto" id="movementto" value="{{ request.form['to_location'] or movement['to_location'] }}">
+    <label for="product_id">Product</label>
+    <input name="product_id" id="product_id" value="{{ request.form['product_id'] or movement['product_id']}}">
+    <label for="qty">Quantity</label>
+    <input name="qty" id="qty" value="{{ request.form['qty'] or movement['qty']}}">
+
+    <input type="submit" value="Save">
+  </form>
+  <hr>
+  <form action="{{ url_for('admin.deletemovement', id=movement['id']) }}" method="post">
+    <input class="danger" type="submit" value="Delete" onclick="return confirm('Are you sure?');">
+  </form>
+{% endblock %}
