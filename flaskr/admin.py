@@ -286,8 +286,3 @@ def deletemovement(id):
     db.execute('DELETE FROM movement WHERE id = ?', (id,))
     db.commit()
     return redirect(url_for('admin.index'))
-
-
-# TODO: test out movment stuffs
-# TODO: figure out of forms is dealing with foreign keys
-# TODO: figure out foreign keys
