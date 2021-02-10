@@ -10,15 +10,15 @@
 <article class="product">
   <header>
     <div>
-      <h1>{{ product['productName'] }}</h1>
-      <div class="about">by {{ product['username'] }} on {{ product['created'].strftime('%Y-%m-%d') }}</div>
+      <h1>{{ product.productName }}</h1>
+      <div class="about">by {{ product.author.username }} on {{ product.created.strftime('%Y-%m-%d') }}</div>
     </div>
-    {% if g.user['id'] == product['author_id'] %}
+    {% if g.user['id'] == product.author_id %}
       <a class="action" href="{{ url_for('admin.updateproduct', id=product['id']) }}">Edit</a>
     {% endif %}
   </header>
 </article>
 <hr>
-<a class="action" href="{{ url_for('admin.index') }}">Home</a>
+<a class="action" href="{{ url_for('inventory.index') }}">Home</a>
 
 {% endblock %}

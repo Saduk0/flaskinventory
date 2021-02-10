@@ -5,8 +5,6 @@ This is an exercise using Flask microframework. I built a simple inventory site 
 # TODO
 [ ] Make sure Movements are all functional
 
-[ ] Make connections between tables
-
 [ ] Make sure views show dropdown from data in db
 
 [ ] Add balance reports

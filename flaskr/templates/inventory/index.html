@@ -3,7 +3,7 @@
 {% block header %}
   <h1>{% block title %}Products{% endblock %}</h1>
   {% if g.user %}
-    <a class="action" href="{{ url_for('admin.createproduct') }}">New</a>
+    <a class="action" href="{{ url_for('inventory.createproduct') }}">New</a>
   {% endif %}
 {% endblock %}
 
@@ -12,11 +12,11 @@
     <article class="product">
       <header>
         <div>
-          <h1><a href="{{ url_for('admin.viewproduct', id=product['id']) }}">{{ product['productName'] }}</a></h1>
+          <h1><a href="{{ url_for('inventory.viewproduct', id=product['id']) }}">{{ product['productName'] }}</a></h1>
           <div class="about">by {{ product['username'] }} on {{ product['created'].strftime('%Y-%m-%d') }}</div>
         </div>
         {% if g.user['id'] == product['author_id'] %}
-          <a class="action" href="{{ url_for('admin.updateproduct', id=product['id']) }}">Edit</a>
+          <a class="action" href="{{ url_for('inventory.updateproduct', id=product['id']) }}">Edit</a>
         {% endif %}
       </header>
     </article>
@@ -29,7 +29,7 @@
   <header>
   <h1>Locations</h1>
   {% if g.user %}
-    <a class="action" href="{{ url_for('admin.createlocation') }}">New</a>
+    <a class="action" href="{{ url_for('inventory.createlocation') }}">New</a>
   {% endif %}
   </header>
 
@@ -37,11 +37,11 @@
     <article class="location">
       <header>
         <div>
-          <h1><a href="{{ url_for('admin.viewlocation', id=location['id']) }}">{{ location['locationName'] }} </a></h1>
+          <h1><a href="{{ url_for('inventory.viewlocation', id=location['id']) }}">{{ location['locationName'] }} </a></h1>
           <div class="about">by {{ location['username'] }} on {{ location['created'].strftime('%Y-%m-%d') }}</div>
         </div>
         {% if g.user['id'] == location['author_id'] %}
-          <a class="action" href="{{ url_for('admin.updatelocation', id=location['id']) }}">Edit</a>
+          <a class="action" href="{{ url_for('inventory.updatelocation', id=location['id']) }}">Edit</a>
         {% endif %}
       </header>
     </article>
@@ -53,7 +53,7 @@
   <header>
   <h1>Movements</h1>
   {% if g.user %}
-    <a class="action" href="{{ url_for('admin.createmovement') }}">New</a>
+    <a class="action" href="{{ url_for('inventory.createmovement') }}">New</a>
   {% endif %}
   </header>
 
@@ -78,7 +78,7 @@
             <td>{{ movement['product'] }}</td>
             <td>{{ movement['qty'] }}</td>
             <td>{% if g.user['id'] == movement['author_id'] %}
-              <a class="action" href="{{ url_for('admin.updatemovement', id=movement['id']) }}">Edit</a>
+              <a class="action" href="{{ url_for('inventory.updatemovement', id=movement['id']) }}">Edit</a>
             {% endif %}</td>
         </tr>
     </tbody></table>

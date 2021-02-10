@@ -4,36 +4,17 @@ from flask import (
 from werkzeug.exceptions import abort
 
 from flaskr.auth import login_required
-from flaskr.db import get_db
+from flaskr.models import User, Product, Location, Movement
+from flaskr import db
 
-bp = Blueprint('admin',__name__)
+bp = Blueprint('inventory',__name__)
 
 @bp.route('/')
 def index():
-    db = get_db()
-    products = db.execute(
-        'SELECT p.id, productName, created, author_id, username'
-        ' FROM product p JOIN user u ON p.author_id = u.id'
-        ' ORDER BY created DESC'
-    ).fetchall()
-    locations = db.execute(
-        'SELECT l.id, locationName, created, author_id, username'
-        ' FROM location l JOIN user u ON l.author_id = u.id'
-        ' ORDER BY created DESC'
-    ).fetchall()
-    movements = db.execute(
-        'SELECT m.id, from_location, to_location, product_id, qty, created, author_id, username'
-        ' FROM movements m JOIN '
-        ' user u ON m.author_id = u.id'
-        # ' FROM movements m JOIN
-        # 'location l ON m.from_location = l.id,'
-        # ' FROM movements m JOIN
-        # 'location l ON m.to_location = l.id,'
-        # ' FROM movements m JOIN
-        # 'product p ON m.product_id = p.id'
-        ' ORDER BY created DESC'
-    ).fetchall()
-    return render_template('admin/index.html', products=products, locations=locations, movements=movements)
+    products = Product.query.all()
+    locations = Location.query.all()
+    movements = Movement.query.all()
+    return render_template('inventory/index.html', products=products, locations=locations, movements=movements)
 
 @bp.route('/createproduct', methods=('GET', 'POST'))
 @login_required
@@ -55,16 +36,11 @@ def createproduct():
                 (productName, g.user['id'])
             )
             db.commit()
-            return redirect(url_for('admin.index'))
-    return render_template('admin/createproduct.html')
+            return redirect(url_for('inventory.index'))
+    return render_template('inventory/createproduct.html')
 
 def get_product(id, check_author=True):
-    product = get_db().execute(
-        'SELECT p.id, productName, created, author_id, username'
-        ' FROM product p JOIN user u ON p.author_id = u.id'
-        ' WHERE p.id = ?',
-        (id,)
-    ).fetchone()
+    product = Product.query.get(id)
     if product is None:
         abort(404, "Product id {0} doesn't exist.".format(id))
 
@@ -94,9 +70,9 @@ def updateproduct(id):
                 (productName, id)
             )
             db.commit()
-            return redirect(url_for('admin.index'))
+            return redirect(url_for('inventory.index'))
 
-    return render_template('admin/updateproduct.html', product=product)
+    return render_template('inventory/updateproduct.html', product=product)
 
 @bp.route('/<int:id>/deleteproduct', methods=('POST',))
 @login_required
@@ -105,13 +81,13 @@ def deleteproduct(id):
     db = get_db()
     db.execute('DELETE FROM product WHERE id = ?', (id,))
     db.commit()
-    return redirect(url_for('admin.index'))
+    return redirect(url_for('inventory.index'))
 
 @bp.route('/p<int:id>/', methods=('GET',))
 def viewproduct(id):
     product = get_product(id, check_author=False)
 
-    return render_template('admin/viewproduct.html', product=product)
+    return render_template('inventory/viewproduct.html', product=product)
 
 
 ###
@@ -140,8 +116,8 @@ def createlocation():
                 (locationName, g.user['id'])
             )
             db.commit()
-            return redirect(url_for('admin.index'))
-    return render_template('admin/createlocation.html')
+            return redirect(url_for('inventory.index'))
+    return render_template('inventory/createlocation.html')
 
 def get_location(id, check_author=True):
     location = get_db().execute(
@@ -179,9 +155,9 @@ def updatelocation(id):
                 (locationName, id)
             )
             db.commit()
-            return redirect(url_for('admin.index'))
+            return redirect(url_for('inventory.index'))
 
-    return render_template('admin/updatelocation.html', location=location)
+    return render_template('inventory/updatelocation.html', location=location)
 
 @bp.route('/<int:id>/deletelocation', methods=('POST',))
 @login_required
@@ -190,13 +166,13 @@ def deletelocation(id):
     db = get_db()
     db.execute('DELETE FROM location WHERE id = ?', (id,))
     db.commit()
-    return redirect(url_for('admin.index'))
+    return redirect(url_for('inventory.index'))
 
 @bp.route('/l<int:id>/', methods=('GET',))
 def viewlocation(id):
     location = get_location(id, check_author=False)
 
-    return render_template('admin/viewlocation.html', location=location)
+    return render_template('inventory/viewlocation.html', location=location)
 
 ####
 
@@ -229,8 +205,8 @@ def createmovement():
                 (from_location, to_location, product_id, qty, g.user['id'])
             )
             db.commit()
-            return redirect(url_for('admin.index'))
-    return render_template('admin/createmovement.html')
+            return redirect(url_for('inventory.index'))
+    return render_template('inventory/createmovement.html')
 
 def get_movement(id, check_author=True):
     movement = get_db().execute(
@@ -274,9 +250,9 @@ def updatemovement(id):
                 (from_location, to_location, product_id, qty, g.user['id'])
             )
             db.commit()
-            return redirect(url_for('admin.index'))
+            return redirect(url_for('inventory.index'))
 
-    return render_template('admin/updatemovement.html', movement=movement)
+    return render_template('inventory/updatemovement.html', movement=movement)
 
 @bp.route('/<int:id>/deletemovement', methods=('POST',))
 @login_required
@@ -285,4 +261,4 @@ def deletemovement(id):
     db = get_db()
     db.execute('DELETE FROM movement WHERE id = ?', (id,))
     db.commit()
-    return redirect(url_for('admin.index'))
+    return redirect(url_for('inventory.index'))
