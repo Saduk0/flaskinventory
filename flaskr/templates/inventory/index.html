@@ -6,7 +6,7 @@
     <a class="action" href="{{ url_for('inventory.createproduct') }}">New</a>
   {% endif %}
 {% endblock %}
-
+{{ print(current_user)}}
 {% block content %}
   {% for product in products %}
     <article class="product">

@@ -23,8 +23,9 @@ def register():
     	    error = 'User {} is already registered.'.format(username)
 
         if error is None:
-            User.db.execute('INSERT INTO user (username, password) VALUES (?, ?)', (username, generate_password_hash(password)))
-            db.commit()
+            u=User(username=username, password=generate_password_hash(password))
+            db.session.add(u)
+            db.session.commit()
             return redirect(url_for('auth.login'))
         flash(error)
     return render_template('auth/register.html')
@@ -55,7 +56,7 @@ def load_logged_in_user():
     if user_id is None:
         g.user = None
     else:
-	    g.user = get_db().execute('SELECT * FROM user WHERE id = ?', (user_id,)).fetchone()
+	    g.user = User.query.filter_by(id=user_id).first()
 
 @bp.route('/logout')
 def logout():
